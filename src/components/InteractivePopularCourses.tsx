@@ -1,14 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 
 interface InteractivePopularCoursesProps {
   onSelectCourse: (title: string, country: string, university: string) => void;
 }
 
 export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps> = ({ onSelectCourse }) => {
+  const [hoveredCourseId, setHoveredCourseId] = useState<number | null>(null);
+  
   // Subset of courses for the form
   const courses = [
     {
@@ -80,80 +81,74 @@ export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps>
   return (
     <>
       {courses.map((course) => (
-        <HoverCard key={course.id} openDelay={150} closeDelay={100}>
-          <HoverCardTrigger asChild>
-            <Card className="course-card overflow-hidden border border-gray-200 cursor-pointer hover:shadow-lg transition-all hover:border-brand-400 transform hover:-translate-y-1 duration-300">
-              <div className="h-1 bg-brand-600"></div>
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-base font-bold text-brand-800 line-clamp-2">
-                    {course.title}
-                  </CardTitle>
-                  <div className="flex space-x-2">
-                    {course.popular && (
-                      <span className="badge badge-popular text-[10px] bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
-                        Popular
-                      </span>
-                    )}
-                    {course.new && (
-                      <span className="badge badge-new text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-                        New
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="text-xs text-gray-500">
-                  {course.country} • {course.duration}
-                </div>
-              </CardHeader>
-              
-              <CardContent className="pt-0 pb-2">
-                <div className="bg-gray-50 p-2 rounded-lg text-xs">
-                  <div className="font-medium text-gray-500">Tuition Fees</div>
-                  <div className="text-brand-700 font-semibold">{course.averageFees}</div>
-                </div>
-              </CardContent>
-              
-              <CardFooter className="pt-1 pb-3 flex justify-center">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="text-xs text-brand-600 hover:bg-brand-50 hover:text-brand-800 transition-colors"
-                  onClick={() => onSelectCourse(course.title, course.country, course.university)}
-                >
-                  Select This Course
-                </Button>
-              </CardFooter>
-            </Card>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 p-4 shadow-xl border-brand-200 animate-fade-in">
-            <div className="space-y-3">
-              <h4 className="font-semibold text-lg text-brand-800">{course.title}</h4>
-              <p className="text-sm text-gray-600">{course.description}</p>
-              
-              <div className="space-y-2 pt-1">
-                <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Admission Requirements</h5>
-                <p className="text-xs">{course.details.requirements}</p>
-                
-                <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100 mt-2">Career Prospects</h5>
-                <p className="text-xs">{course.details.prospects}</p>
-                
-                <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100 mt-2">Scholarship Opportunities</h5>
-                <p className="text-xs">{course.details.scholarships}</p>
-              </div>
-              
-              <div className="pt-2 text-center">
-                <Button 
-                  size="sm" 
-                  className="text-xs bg-brand-600 hover:bg-brand-700 w-full transition-colors"
-                  onClick={() => onSelectCourse(course.title, course.country, course.university)}
-                >
-                  Select This Course
-                </Button>
+        <Card 
+          key={course.id} 
+          className="course-card overflow-hidden border border-gray-200 cursor-pointer hover:shadow-lg transition-all hover:border-brand-400 transform hover:-translate-y-1 duration-300"
+          onMouseEnter={() => setHoveredCourseId(course.id)}
+          onMouseLeave={() => setHoveredCourseId(null)}
+        >
+          <div className="h-1 bg-brand-600"></div>
+          <CardHeader className="pb-2">
+            <div className="flex justify-between items-start">
+              <CardTitle className="text-base font-bold text-brand-800 line-clamp-2">
+                {course.title}
+              </CardTitle>
+              <div className="flex space-x-2">
+                {course.popular && (
+                  <span className="badge badge-popular text-[10px] bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
+                    Popular
+                  </span>
+                )}
+                {course.new && (
+                  <span className="badge badge-new text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                    New
+                  </span>
+                )}
               </div>
             </div>
-          </HoverCardContent>
-        </HoverCard>
+            <div className="text-xs text-gray-500">
+              {course.country} • {course.duration}
+            </div>
+          </CardHeader>
+          
+          <CardContent className="pt-0 pb-2">
+            <div className="bg-gray-50 p-2 rounded-lg text-xs">
+              <div className="font-medium text-gray-500">Tuition Fees</div>
+              <div className="text-brand-700 font-semibold">{course.averageFees}</div>
+            </div>
+            
+            {/* Expandable content that shows on hover */}
+            <div className={`mt-3 overflow-hidden transition-all duration-300 ${hoveredCourseId === course.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="space-y-3 p-2 bg-gray-50 rounded-lg">
+                <div>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Admission Requirements</h5>
+                  <p className="text-xs mt-1">{course.details.requirements}</p>
+                </div>
+                
+                <div>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Career Prospects</h5>
+                  <p className="text-xs mt-1">{course.details.prospects}</p>
+                </div>
+                
+                <div>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Scholarship Opportunities</h5>
+                  <p className="text-xs mt-1">{course.details.scholarships}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+          
+          <CardFooter className="pt-1 pb-3 flex justify-center">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-xs text-brand-600 hover:bg-brand-50 hover:text-brand-800 transition-colors w-full"
+              onClick={() => onSelectCourse(course.title, course.country, course.university)}
+            >
+              Select This Course
+            </Button>
+          </CardFooter>
+        </Card>
       ))}
     </>
   );

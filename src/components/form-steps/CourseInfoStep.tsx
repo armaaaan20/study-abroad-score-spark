@@ -31,7 +31,7 @@ const CourseInfoStep: React.FC<CourseInfoStepProps> = ({
     <>
       <div className="mb-6">
         <h4 className="text-lg font-medium text-brand-700 mb-3">Popular Programs You Might Be Interested In</h4>
-        <p className="text-sm text-gray-600 mb-4">Browse these popular courses or enter your own preference below. Hover on any course for more details.</p>
+        <p className="text-sm text-gray-600 mb-4">Browse these popular courses or enter your own preference below. Hover over any course to see more details.</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <InteractivePopularCourses onSelectCourse={onSelectCourse} />
