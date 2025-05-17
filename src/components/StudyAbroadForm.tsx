@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import ProgressBar from './ProgressBar';
 import { calculateEligibility, FormData, EligibilityResult } from '../services/eligibilityService';
 import { sendEmailToOwner } from '../services/emailService';
 import { useFormValidation } from '../hooks/useFormValidation';
+import { supabase } from "@/integrations/supabase/client";
 
 // Importing form step components
 import PersonalInfoStep from './form-steps/PersonalInfoStep';
@@ -117,6 +119,35 @@ const StudyAbroadForm: React.FC = () => {
     }
   };
 
+  const saveConsultationBooking = async (formData: FormData, eligibilityScore: number) => {
+    try {
+      const { error } = await supabase.from('consultation_bookings').insert({
+        name: formData.name,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        academics: formData.academics,
+        english_test_type: formData.englishTestType,
+        english_score: formData.englishScore,
+        backlogs: formData.backlogs,
+        budget: formData.budget,
+        country: formData.country,
+        course: formData.course,
+        intake: formData.intake,
+        eligibility_score: eligibilityScore
+      });
+
+      if (error) {
+        console.error("Error saving consultation booking:", error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error saving consultation booking:", error);
+      return false;
+    }
+  };
+
   const handleBookCounseling = async () => {
     if (!result) return;
     
@@ -127,7 +158,11 @@ const StudyAbroadForm: React.FC = () => {
       description: "Please wait while we connect you with a counselor...",
     });
     
-    const success = await sendEmailToOwner({
+    // Save to Supabase
+    const savedToDatabase = await saveConsultationBooking(formData, result.score);
+    
+    // Also send email to owner as before
+    const emailSent = await sendEmailToOwner({
       formData,
       eligibilityScore: result.score,
       requestType: 'counseling'
@@ -135,10 +170,15 @@ const StudyAbroadForm: React.FC = () => {
     
     setIsSubmitting(false);
     
-    if (success) {
+    if (savedToDatabase && emailSent) {
       toast({
         title: "Booking Scheduled",
         description: "Our counselor will contact you soon!",
+      });
+    } else if (savedToDatabase) {
+      toast({
+        title: "Booking Received",
+        description: "Your counseling request has been recorded. Our team will contact you soon!",
       });
     } else {
       toast({
@@ -158,6 +198,9 @@ const StudyAbroadForm: React.FC = () => {
       title: "Processing download",
       description: "Preparing your guide...",
     });
+    
+    // Also save to Supabase when downloading guide
+    const savedToDatabase = await saveConsultationBooking(formData, result.score);
     
     const success = await sendEmailToOwner({
       formData,
