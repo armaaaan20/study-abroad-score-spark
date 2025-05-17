@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 
 const courses = [
   {
@@ -13,7 +14,12 @@ const courses = [
     duration: '2 years',
     popular: true,
     new: false,
-    averageFees: '$25,000 - $45,000 per year'
+    averageFees: '$25,000 - $45,000 per year',
+    details: {
+      requirements: 'Bachelor's degree with 75%+ marks, GRE 310+, IELTS 7+',
+      prospects: 'Software Engineer, Data Scientist, ML Engineer, Product Manager',
+      scholarships: 'TA/RA positions, University Merit Scholarships, STEM Fellowships'
+    }
   },
   {
     id: 2,
@@ -24,7 +30,12 @@ const courses = [
     duration: '1-2 years',
     popular: true,
     new: false,
-    averageFees: 'CAD 30,000 - 50,000 per year'
+    averageFees: 'CAD 30,000 - 50,000 per year',
+    details: {
+      requirements: 'Bachelor's degree with 70%+ marks, 2+ years work experience, GMAT 650+',
+      prospects: 'Management Consultant, Financial Analyst, Marketing Manager, Entrepreneur',
+      scholarships: 'University Scholarships, Corporate Sponsorships, Leadership Awards'
+    }
   },
   {
     id: 3,
@@ -35,7 +46,12 @@ const courses = [
     duration: '2 years',
     popular: true,
     new: false,
-    averageFees: 'AUD 35,000 - 45,000 per year'
+    averageFees: 'AUD 35,000 - 45,000 per year',
+    details: {
+      requirements: 'Bachelor's degree in Engineering with 65%+ marks, IELTS 6.5+',
+      prospects: 'Professional Engineer, Project Manager, Technical Consultant',
+      scholarships: 'Australia Awards, Research Scholarships, Engineering Excellence Grants'
+    }
   },
   {
     id: 4,
@@ -46,7 +62,12 @@ const courses = [
     duration: '1 year',
     popular: true,
     new: true,
-    averageFees: '£18,000 - £30,000 per year'
+    averageFees: '£18,000 - £30,000 per year',
+    details: {
+      requirements: 'Bachelor's degree with 65%+ marks in quantitative field, IELTS 6.5+',
+      prospects: 'Data Scientist, Data Analyst, Business Intelligence Specialist',
+      scholarships: 'Chevening Scholarships, Commonwealth Scholarships, University Grants'
+    }
   },
   {
     id: 5,
@@ -57,7 +78,12 @@ const courses = [
     duration: '6 years',
     popular: false,
     new: false,
-    averageFees: 'Minimal fees (mostly public universities)'
+    averageFees: 'Minimal fees (mostly public universities)',
+    details: {
+      requirements: 'Excellent academic record, German language proficiency (B2/C1)',
+      prospects: 'Doctor, Medical Researcher, Healthcare Administrator',
+      scholarships: 'DAAD Scholarships, German Academic Merit Scholarships'
+    }
   },
   {
     id: 6,
@@ -68,7 +94,12 @@ const courses = [
     duration: '3-4 years',
     popular: false,
     new: true,
-    averageFees: 'CHF 25,000 - 40,000 per year'
+    averageFees: 'CHF 25,000 - 40,000 per year',
+    details: {
+      requirements: 'High school diploma with good grades, English proficiency',
+      prospects: 'Hotel Manager, Event Director, Tourism Executive, Restaurant Manager',
+      scholarships: 'Merit-based Scholarships, Hospitality Industry Sponsorships'
+    }
   }
 ];
 
@@ -84,38 +115,59 @@ const PopularCourses: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((course) => (
-          <Card key={course.id} className="course-card overflow-hidden border border-gray-200">
-            <div className="h-2 bg-brand-600"></div>
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-xl font-bold text-brand-800 line-clamp-2">
-                  {course.title}
-                </CardTitle>
-                <div className="flex space-x-2">
-                  {course.popular && <span className="badge badge-popular">Popular</span>}
-                  {course.new && <span className="badge badge-new">New</span>}
+          <HoverCard key={course.id} openDelay={200} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Card className="course-card overflow-hidden border border-gray-200">
+                <div className="h-2 bg-brand-600"></div>
+                <CardHeader className="pb-3">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-xl font-bold text-brand-800 line-clamp-2">
+                      {course.title}
+                    </CardTitle>
+                    <div className="flex space-x-2">
+                      {course.popular && <span className="badge badge-popular">Popular</span>}
+                      {course.new && <span className="badge badge-new">New</span>}
+                    </div>
+                  </div>
+                  <div className="text-sm text-gray-500 mt-1">
+                    {course.country} • {course.duration}
+                  </div>
+                </CardHeader>
+                
+                <CardContent>
+                  <p className="text-gray-600 mb-4">{course.description}</p>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="text-sm font-medium text-gray-500">Average Tuition Fees</div>
+                    <div className="text-brand-700 font-semibold mt-1">{course.averageFees}</div>
+                  </div>
+                </CardContent>
+                
+                <CardFooter className="border-t pt-4 flex justify-between">
+                  <div className="text-sm text-gray-500">{course.university}</div>
+                  <Button variant="ghost" className="text-brand-600 hover:text-brand-800 p-0">
+                    Check Eligibility
+                  </Button>
+                </CardFooter>
+              </Card>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-lg">{course.title}</h4>
+                <p className="text-sm text-gray-600">{course.description}</p>
+                
+                <div className="space-y-1 pt-2">
+                  <h5 className="text-sm font-semibold text-brand-700">Admission Requirements</h5>
+                  <p className="text-xs">{course.details.requirements}</p>
+                  
+                  <h5 className="text-sm font-semibold text-brand-700 pt-1">Career Prospects</h5>
+                  <p className="text-xs">{course.details.prospects}</p>
+                  
+                  <h5 className="text-sm font-semibold text-brand-700 pt-1">Scholarship Opportunities</h5>
+                  <p className="text-xs">{course.details.scholarships}</p>
                 </div>
               </div>
-              <div className="text-sm text-gray-500 mt-1">
-                {course.country} • {course.duration}
-              </div>
-            </CardHeader>
-            
-            <CardContent>
-              <p className="text-gray-600 mb-4">{course.description}</p>
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <div className="text-sm font-medium text-gray-500">Average Tuition Fees</div>
-                <div className="text-brand-700 font-semibold mt-1">{course.averageFees}</div>
-              </div>
-            </CardContent>
-            
-            <CardFooter className="border-t pt-4 flex justify-between">
-              <div className="text-sm text-gray-500">{course.university}</div>
-              <Button variant="ghost" className="text-brand-600 hover:text-brand-800 p-0">
-                Check Eligibility
-              </Button>
-            </CardFooter>
-          </Card>
+            </HoverCardContent>
+          </HoverCard>
         ))}
       </div>
       

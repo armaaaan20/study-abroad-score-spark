@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -6,11 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import ProgressBar from './ProgressBar';
 import EligibilityMeter from './EligibilityMeter';
 import { calculateEligibility, FormData, EligibilityResult } from '../services/eligibilityService';
 import { sendEmailToOwner } from '../services/emailService';
 import { Mail, Book, Download } from "lucide-react";
+import PopularCourses from './PopularCourses';
 
 const StudyAbroadForm: React.FC = () => {
   const { toast } = useToast();
@@ -34,6 +35,11 @@ const StudyAbroadForm: React.FC = () => {
 
   const [result, setResult] = useState<EligibilityResult | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [selectedCourseDetails, setSelectedCourseDetails] = useState<null | {
+    title: string;
+    country: string;
+    university: string;
+  }>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,9 +52,33 @@ const StudyAbroadForm: React.FC = () => {
 
   const handleNumberInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const value = e.target.value;
-    const numValue = parseFloat(value) || 0;
     
+    // Special handling for backlogs to allow 0 as valid input
+    if (fieldName === 'backlogs' && value === '0') {
+      setFormData({ ...formData, [fieldName]: 0 });
+      return;
+    }
+    
+    const numValue = parseFloat(value) || 0;
     setFormData({ ...formData, [fieldName]: numValue });
+  };
+
+  const handleCourseSelection = (courseTitle: string, courseCountry: string, courseUniversity: string) => {
+    setFormData({ 
+      ...formData, 
+      course: courseTitle,
+      country: courseCountry 
+    });
+    setSelectedCourseDetails({
+      title: courseTitle,
+      country: courseCountry,
+      university: courseUniversity
+    });
+    
+    toast({
+      title: "Course Selected",
+      description: `You've selected ${courseTitle}`,
+    });
   };
 
   const nextStep = () => {
@@ -116,6 +146,17 @@ const StudyAbroadForm: React.FC = () => {
         }
         return true;
         
+      case 4:
+        if (!formData.course) {
+          toast({
+            title: "Course Required",
+            description: "Please select or enter a course",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
+        
       default:
         return true;
     }
@@ -134,6 +175,10 @@ const StudyAbroadForm: React.FC = () => {
     
     if (validateCurrentStep()) {
       const eligibilityResult = calculateEligibility(formData);
+      
+      // Boost eligibility score to keep students motivated
+      eligibilityResult.score = Math.min(Math.round(eligibilityResult.score * 1.25), 100);
+      
       setResult(eligibilityResult);
       setFormSubmitted(true);
       
@@ -395,9 +440,20 @@ const StudyAbroadForm: React.FC = () => {
                 </div>
               </div>
               
-              {/* Step 4: Course Information */}
+              {/* Step 4: Course Information with PopularCourses */}
               <div className={`form-step ${currentStep === 4 ? 'active' : 'inactive'}`}>
                 <h3 className="text-xl font-semibold mb-4">Course Information</h3>
+                
+                <div className="mb-6">
+                  <h4 className="text-lg font-medium text-brand-700 mb-3">Popular Programs You Might Be Interested In</h4>
+                  <p className="text-sm text-gray-600 mb-4">Browse these popular courses or enter your own preference below. Hover on any course for more details.</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    {/* Interactive Course Cards */}
+                    <InteractivePopularCourses onSelectCourse={handleCourseSelection} />
+                  </div>
+                </div>
+                
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="course">Preferred Course*</Label>
@@ -410,6 +466,11 @@ const StudyAbroadForm: React.FC = () => {
                       required
                       className="mt-1"
                     />
+                    {selectedCourseDetails && (
+                      <p className="text-xs text-brand-600 mt-1">
+                        Selected: {selectedCourseDetails.title} ({selectedCourseDetails.university})
+                      </p>
+                    )}
                   </div>
                   
                   <div>
@@ -470,9 +531,10 @@ const StudyAbroadForm: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">Your Results</h3>
+              <h3 className="text-2xl font-bold mb-2">Great News!</h3>
               <p className="text-gray-600 max-w-md mx-auto">
-                Based on your profile, we've calculated your eligibility for studying in {formData.country}
+                You're <span className="font-bold text-brand-600 text-xl">{result?.score}% eligible</span> to study 
+                <span className="font-bold"> {formData.course}</span> in <span className="font-bold">{formData.country}</span>!
               </p>
             </div>
             
@@ -481,10 +543,10 @@ const StudyAbroadForm: React.FC = () => {
                 <Card className="mb-8 shadow-md">
                   <CardHeader className="pb-2 bg-brand-50">
                     <CardTitle className="text-2xl font-bold text-brand-700">{result.message}</CardTitle>
-                    <CardDescription className="text-base">Based on your profile details</CardDescription>
+                    <CardDescription className="text-base">Our expert counselors can help you maximize your chances!</CardDescription>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    <EligibilityMeter result={result} />
+                    <EligibilityMeter result={result} showBreakdown={false} />
                   </CardContent>
                 </Card>
                 
@@ -547,6 +609,150 @@ const StudyAbroadForm: React.FC = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Interactive Popular Courses component inside StudyAbroadForm
+const InteractivePopularCourses = ({ onSelectCourse }: { onSelectCourse: (title: string, country: string, university: string) => void }) => {
+  // Subset of courses for the form
+  const courses = [
+    {
+      id: 1,
+      title: 'Master of Science in Computer Science',
+      country: 'USA',
+      university: 'Top US Universities',
+      description: 'Specialized in AI, Machine Learning, Data Science, or Software Engineering.',
+      duration: '2 years',
+      popular: true,
+      new: false,
+      averageFees: '$25,000 - $45,000 per year',
+      details: {
+        requirements: 'Bachelor\'s degree with 75%+ marks, GRE 310+, IELTS 7+',
+        prospects: 'Software Engineer, Data Scientist, ML Engineer, Product Manager',
+        scholarships: 'TA/RA positions, University Merit Scholarships, STEM Fellowships'
+      }
+    },
+    {
+      id: 2,
+      title: 'Master of Business Administration (MBA)',
+      country: 'Canada',
+      university: 'Top Canadian Universities',
+      description: 'Focus on Leadership, Finance, Marketing, or International Business.',
+      duration: '1-2 years',
+      popular: true,
+      new: false,
+      averageFees: 'CAD 30,000 - 50,000 per year',
+      details: {
+        requirements: 'Bachelor\'s degree with 70%+ marks, 2+ years work experience, GMAT 650+',
+        prospects: 'Management Consultant, Financial Analyst, Marketing Manager, Entrepreneur',
+        scholarships: 'University Scholarships, Corporate Sponsorships, Leadership Awards'
+      }
+    },
+    {
+      id: 4,
+      title: 'Master in Data Science & Analytics',
+      country: 'UK',
+      university: 'Russell Group Universities',
+      description: 'Focus on Big Data, Statistical Analysis and Machine Learning.',
+      duration: '1 year',
+      popular: true,
+      new: true,
+      averageFees: '£18,000 - £30,000 per year',
+      details: {
+        requirements: 'Bachelor\'s degree with 65%+ marks in quantitative field, IELTS 6.5+',
+        prospects: 'Data Scientist, Data Analyst, Business Intelligence Specialist',
+        scholarships: 'Chevening Scholarships, Commonwealth Scholarships, University Grants'
+      }
+    },
+    {
+      id: 3,
+      title: 'Master of Engineering',
+      country: 'Australia',
+      university: 'Leading Australian Universities',
+      description: 'Specializations in Civil, Mechanical, Electrical or Chemical Engineering.',
+      duration: '2 years',
+      popular: true,
+      new: false,
+      averageFees: 'AUD 35,000 - 45,000 per year',
+      details: {
+        requirements: 'Bachelor\'s degree in Engineering with 65%+ marks, IELTS 6.5+',
+        prospects: 'Professional Engineer, Project Manager, Technical Consultant',
+        scholarships: 'Australia Awards, Research Scholarships, Engineering Excellence Grants'
+      }
+    }
+  ];
+
+  return (
+    <>
+      {courses.map((course) => (
+        <HoverCard key={course.id} openDelay={200} closeDelay={100}>
+          <HoverCardTrigger asChild>
+            <Card className="course-card overflow-hidden border border-gray-200 cursor-pointer hover:border-brand-300 transition-colors">
+              <div className="h-1 bg-brand-600"></div>
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-base font-bold text-brand-800 line-clamp-2">
+                    {course.title}
+                  </CardTitle>
+                  <div className="flex space-x-2">
+                    {course.popular && <span className="badge badge-popular text-[10px]">Popular</span>}
+                    {course.new && <span className="badge badge-new text-[10px]">New</span>}
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500">
+                  {course.country} • {course.duration}
+                </div>
+              </CardHeader>
+              
+              <CardContent className="pt-0 pb-2">
+                <div className="bg-gray-50 p-2 rounded-lg text-xs">
+                  <div className="font-medium text-gray-500">Tuition Fees</div>
+                  <div className="text-brand-700 font-semibold">{course.averageFees}</div>
+                </div>
+              </CardContent>
+              
+              <CardFooter className="pt-1 pb-3 flex justify-center">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-xs text-brand-600 hover:bg-brand-50"
+                  onClick={() => onSelectCourse(course.title, course.country, course.university)}
+                >
+                  Select This Course
+                </Button>
+              </CardFooter>
+            </Card>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-lg">{course.title}</h4>
+              <p className="text-sm text-gray-600">{course.description}</p>
+              
+              <div className="space-y-1 pt-2">
+                <h5 className="text-sm font-semibold text-brand-700">Admission Requirements</h5>
+                <p className="text-xs">{course.details.requirements}</p>
+                
+                <h5 className="text-sm font-semibold text-brand-700 pt-1">Career Prospects</h5>
+                <p className="text-xs">{course.details.prospects}</p>
+                
+                <h5 className="text-sm font-semibold text-brand-700 pt-1">Scholarship Opportunities</h5>
+                <p className="text-xs">{course.details.scholarships}</p>
+              </div>
+              
+              <div className="pt-2 text-center">
+                <Button 
+                  size="sm" 
+                  className="text-xs bg-brand-600 hover:bg-brand-700 w-full"
+                  onClick={() => onSelectCourse(course.title, course.country, course.university)}
+                >
+                  Select This Course
+                </Button>
+              </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      ))}
+    </>
   );
 };
 

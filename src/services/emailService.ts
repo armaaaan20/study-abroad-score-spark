@@ -15,6 +15,22 @@ export async function sendEmailToOwner(submission: EmailSubmission): Promise<boo
     
     console.log('Sending email with data:', submission);
     
+    // Include specific course details from the form data
+    const emailData = {
+      name: submission.formData.name,
+      email: submission.formData.email,
+      whatsapp: submission.formData.whatsapp,
+      score: submission.eligibilityScore,
+      requestType: submission.requestType,
+      course: submission.formData.course,
+      country: submission.formData.country,
+      intake: submission.formData.intake,
+      budget: submission.formData.budget,
+      academics: submission.formData.academics
+    };
+    
+    console.log('Prepared email data:', emailData);
+    
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500));
     
@@ -24,14 +40,7 @@ export async function sendEmailToOwner(submission: EmailSubmission): Promise<boo
     // await emailjs.send(
     //   'YOUR_SERVICE_ID',
     //   'YOUR_TEMPLATE_ID',
-    //   {
-    //     name: submission.formData.name,
-    //     email: submission.formData.email,
-    //     whatsapp: submission.formData.whatsapp,
-    //     score: submission.eligibilityScore,
-    //     requestType: submission.requestType,
-    //     ...submission.formData
-    //   },
+    //   emailData,
     //   'YOUR_PUBLIC_KEY'
     // );
     
