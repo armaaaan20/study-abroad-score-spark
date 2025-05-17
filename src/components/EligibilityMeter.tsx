@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface EligibilityMeterProps {
   result: EligibilityResult;
+  showBreakdown?: boolean; // Added optional prop
 }
 
-const EligibilityMeter: React.FC<EligibilityMeterProps> = ({ result }) => {
+const EligibilityMeter: React.FC<EligibilityMeterProps> = ({ result, showBreakdown = true }) => {
   const [animatedScore, setAnimatedScore] = useState(0);
 
   useEffect(() => {
@@ -46,55 +47,57 @@ const EligibilityMeter: React.FC<EligibilityMeterProps> = ({ result }) => {
         </CardContent>
       </Card>
       
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-5">Score Breakdown</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Card className="shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">Academics</p>
-                <p className="text-lg font-semibold text-brand-700">{result.breakdown.academics}%</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">English Score</p>
-                <p className="text-lg font-semibold text-brand-700">{result.breakdown.englishScore}%</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">Budget</p>
-                <p className="text-lg font-semibold text-brand-700">{result.breakdown.budget}%</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">Backlogs</p>
-                <p className="text-lg font-semibold text-brand-700">{result.breakdown.backlogs}%</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="col-span-1 sm:col-span-2 shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">Country Match</p>
-                <p className="text-lg font-semibold text-brand-700">{result.breakdown.countryMatch}%</p>
-              </div>
-            </CardContent>
-          </Card>
+      {showBreakdown && (
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold text-gray-900 mb-5">Score Breakdown</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Card className="shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-600">Academics</p>
+                  <p className="text-lg font-semibold text-brand-700">{result.breakdown.academics}%</p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-600">English Score</p>
+                  <p className="text-lg font-semibold text-brand-700">{result.breakdown.englishScore}%</p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-600">Budget</p>
+                  <p className="text-lg font-semibold text-brand-700">{result.breakdown.budget}%</p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-600">Backlogs</p>
+                  <p className="text-lg font-semibold text-brand-700">{result.breakdown.backlogs}%</p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="col-span-1 sm:col-span-2 shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-600">Country Match</p>
+                  <p className="text-lg font-semibold text-brand-700">{result.breakdown.countryMatch}%</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
