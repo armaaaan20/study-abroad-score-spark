@@ -80,9 +80,9 @@ export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps>
   return (
     <>
       {courses.map((course) => (
-        <HoverCard key={course.id} openDelay={200} closeDelay={100}>
+        <HoverCard key={course.id} openDelay={150} closeDelay={100}>
           <HoverCardTrigger asChild>
-            <Card className="course-card overflow-hidden border border-gray-200 cursor-pointer hover:border-brand-300 transition-colors">
+            <Card className="course-card overflow-hidden border border-gray-200 cursor-pointer hover:shadow-lg transition-all hover:border-brand-400 transform hover:-translate-y-1 duration-300">
               <div className="h-1 bg-brand-600"></div>
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
@@ -90,8 +90,16 @@ export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps>
                     {course.title}
                   </CardTitle>
                   <div className="flex space-x-2">
-                    {course.popular && <span className="badge badge-popular text-[10px]">Popular</span>}
-                    {course.new && <span className="badge badge-new text-[10px]">New</span>}
+                    {course.popular && (
+                      <span className="badge badge-popular text-[10px] bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
+                        Popular
+                      </span>
+                    )}
+                    {course.new && (
+                      <span className="badge badge-new text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                        New
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="text-xs text-gray-500">
@@ -110,7 +118,7 @@ export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="text-xs text-brand-600 hover:bg-brand-50"
+                  className="text-xs text-brand-600 hover:bg-brand-50 hover:text-brand-800 transition-colors"
                   onClick={() => onSelectCourse(course.title, course.country, course.university)}
                 >
                   Select This Course
@@ -118,26 +126,26 @@ export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps>
               </CardFooter>
             </Card>
           </HoverCardTrigger>
-          <HoverCardContent className="w-80">
-            <div className="space-y-2">
-              <h4 className="font-semibold text-lg">{course.title}</h4>
+          <HoverCardContent className="w-80 p-4 shadow-xl border-brand-200 animate-fade-in">
+            <div className="space-y-3">
+              <h4 className="font-semibold text-lg text-brand-800">{course.title}</h4>
               <p className="text-sm text-gray-600">{course.description}</p>
               
-              <div className="space-y-1 pt-2">
-                <h5 className="text-sm font-semibold text-brand-700">Admission Requirements</h5>
+              <div className="space-y-2 pt-1">
+                <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Admission Requirements</h5>
                 <p className="text-xs">{course.details.requirements}</p>
                 
-                <h5 className="text-sm font-semibold text-brand-700 pt-1">Career Prospects</h5>
+                <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100 mt-2">Career Prospects</h5>
                 <p className="text-xs">{course.details.prospects}</p>
                 
-                <h5 className="text-sm font-semibold text-brand-700 pt-1">Scholarship Opportunities</h5>
+                <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100 mt-2">Scholarship Opportunities</h5>
                 <p className="text-xs">{course.details.scholarships}</p>
               </div>
               
               <div className="pt-2 text-center">
                 <Button 
                   size="sm" 
-                  className="text-xs bg-brand-600 hover:bg-brand-700 w-full"
+                  className="text-xs bg-brand-600 hover:bg-brand-700 w-full transition-colors"
                   onClick={() => onSelectCourse(course.title, course.country, course.university)}
                 >
                   Select This Course

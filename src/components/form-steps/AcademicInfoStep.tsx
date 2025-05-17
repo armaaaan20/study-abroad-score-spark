@@ -84,7 +84,7 @@ const AcademicInfoStep: React.FC<AcademicInfoStepProps> = ({
           type="number"
           min="0"
           placeholder="Enter number of backlogs (0 if none)"
-          value={formData.backlogs || ''}
+          value={formData.backlogs === 0 ? '0' : formData.backlogs || ''}
           onChange={(e) => handleNumberInputChange(e, 'backlogs')}
           required
           className="mt-1"

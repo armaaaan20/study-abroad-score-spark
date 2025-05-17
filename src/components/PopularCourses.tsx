@@ -115,9 +115,9 @@ const PopularCourses: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((course) => (
-          <HoverCard key={course.id} openDelay={200} closeDelay={100}>
+          <HoverCard key={course.id} openDelay={150} closeDelay={100}>
             <HoverCardTrigger asChild>
-              <Card className="course-card overflow-hidden border border-gray-200">
+              <Card className="course-card overflow-hidden border border-gray-200 cursor-pointer hover:shadow-lg transition-all hover:border-brand-400 transform hover:-translate-y-1 duration-300">
                 <div className="h-2 bg-brand-600"></div>
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start">
@@ -125,8 +125,16 @@ const PopularCourses: React.FC = () => {
                       {course.title}
                     </CardTitle>
                     <div className="flex space-x-2">
-                      {course.popular && <span className="badge badge-popular">Popular</span>}
-                      {course.new && <span className="badge badge-new">New</span>}
+                      {course.popular && (
+                        <span className="badge bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">
+                          Popular
+                        </span>
+                      )}
+                      {course.new && (
+                        <span className="badge bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">
+                          New
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="text-sm text-gray-500 mt-1">
@@ -150,19 +158,19 @@ const PopularCourses: React.FC = () => {
                 </CardFooter>
               </Card>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80">
-              <div className="space-y-2">
-                <h4 className="font-semibold text-lg">{course.title}</h4>
+            <HoverCardContent className="w-80 p-4 shadow-xl border-brand-200 animate-fade-in">
+              <div className="space-y-3">
+                <h4 className="font-semibold text-lg text-brand-800">{course.title}</h4>
                 <p className="text-sm text-gray-600">{course.description}</p>
                 
-                <div className="space-y-1 pt-2">
-                  <h5 className="text-sm font-semibold text-brand-700">Admission Requirements</h5>
+                <div className="space-y-2 pt-1">
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Admission Requirements</h5>
                   <p className="text-xs">{course.details.requirements}</p>
                   
-                  <h5 className="text-sm font-semibold text-brand-700 pt-1">Career Prospects</h5>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100 mt-2">Career Prospects</h5>
                   <p className="text-xs">{course.details.prospects}</p>
                   
-                  <h5 className="text-sm font-semibold text-brand-700 pt-1">Scholarship Opportunities</h5>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100 mt-2">Scholarship Opportunities</h5>
                   <p className="text-xs">{course.details.scholarships}</p>
                 </div>
               </div>

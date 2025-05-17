@@ -1,4 +1,3 @@
-
 export interface FormData {
   name: string;
   email: string;
@@ -97,13 +96,13 @@ export function calculateEligibility(formData: FormData): EligibilityResult {
     breakdown.backlogs + 
     breakdown.countryMatch;
 
-  // Cap the score at 89%
-  totalScore = Math.min(totalScore, 89);
+  // Boost the score to keep students motivated (minimum 45%, maximum 89%)
+  totalScore = Math.max(Math.min(Math.round(totalScore * 1.5), 89), 45);
 
   return {
     score: totalScore,
     country: formData.country,
     breakdown: breakdown,
-    message: `🎯 You're ${totalScore}% eligible for ${formData.country}! We can boost it to 100% with expert guidance!`
+    message: `You're on the right track! We can help you achieve 100% success for your ${formData.country} dream.`
   };
 }

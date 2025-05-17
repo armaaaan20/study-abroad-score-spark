@@ -38,8 +38,8 @@ const EligibilityResults: React.FC<EligibilityResultsProps> = ({
       
       <Card className="mb-8 shadow-md">
         <CardHeader className="pb-2 bg-brand-50">
-          <CardTitle className="text-2xl font-bold text-brand-700">{result.message}</CardTitle>
-          <CardDescription className="text-base">Our expert counselors can help you maximize your chances!</CardDescription>
+          <CardTitle className="text-2xl font-bold text-brand-700">Your Path to Success</CardTitle>
+          <CardDescription className="text-base">With personalized guidance, you can achieve 100% success for your dream education!</CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           <EligibilityMeter result={result} showBreakdown={false} />

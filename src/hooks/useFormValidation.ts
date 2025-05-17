@@ -11,7 +11,7 @@ export const useFormValidation = () => {
         if (!formData.name || !formData.email || !formData.whatsapp) {
           toast({
             title: "Required Fields",
-            description: "Please fill in all the required fields",
+            description: "Please fill in all the required fields to proceed.",
             variant: "destructive"
           });
           return false;
@@ -19,7 +19,7 @@ export const useFormValidation = () => {
         if (!validateEmail(formData.email)) {
           toast({
             title: "Invalid Email",
-            description: "Please enter a valid email address",
+            description: "Please enter a valid email address to receive important updates.",
             variant: "destructive"
           });
           return false;
@@ -27,7 +27,7 @@ export const useFormValidation = () => {
         if (!validatePhone(formData.whatsapp)) {
           toast({
             title: "Invalid WhatsApp Number",
-            description: "Please enter a valid WhatsApp number with country code",
+            description: "Please enter a valid WhatsApp number with country code for easy communication.",
             variant: "destructive"
           });
           return false;
@@ -38,7 +38,15 @@ export const useFormValidation = () => {
         if (formData.academics < 0 || formData.academics > 100) {
           toast({
             title: "Invalid Academic Score",
-            description: "Please enter a valid academic percentage (0-100)",
+            description: "Please enter a valid academic percentage between 0 and 100.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        if (formData.englishTestType !== 'None' && (!formData.englishScore || formData.englishScore <= 0)) {
+          toast({
+            title: "English Score Required",
+            description: `Please enter your ${formData.englishTestType} score to accurately assess your eligibility.`,
             variant: "destructive"
           });
           return false;
@@ -48,8 +56,24 @@ export const useFormValidation = () => {
       case 3:
         if (formData.budget <= 0) {
           toast({
-            title: "Invalid Budget",
-            description: "Please enter your budget",
+            title: "Budget Information Required",
+            description: "Please enter your budget to help us recommend suitable programs.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        if (!formData.country) {
+          toast({
+            title: "Country Preference Required",
+            description: "Please select your preferred study destination.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        if (!formData.intake) {
+          toast({
+            title: "Intake Period Required",
+            description: "Please select your preferred intake period.",
             variant: "destructive"
           });
           return false;
@@ -59,8 +83,8 @@ export const useFormValidation = () => {
       case 4:
         if (!formData.course) {
           toast({
-            title: "Course Required",
-            description: "Please select or enter a course",
+            title: "Course Selection Required",
+            description: "Please select or enter a course to complete your application.",
             variant: "destructive"
           });
           return false;
