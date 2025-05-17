@@ -103,9 +103,7 @@ const StudyAbroadForm: React.FC = () => {
     if (validateCurrentStep(currentStep, formData)) {
       const eligibilityResult = calculateEligibility(formData);
       
-      // Boost eligibility score to keep students motivated
-      eligibilityResult.score = Math.min(Math.round(eligibilityResult.score * 1.25), 100);
-      
+      // No longer artificially boosting the score
       setResult(eligibilityResult);
       setFormSubmitted(true);
       
