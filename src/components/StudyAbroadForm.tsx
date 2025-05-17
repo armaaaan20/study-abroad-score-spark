@@ -137,7 +137,6 @@ const StudyAbroadForm: React.FC = () => {
       setResult(eligibilityResult);
       setFormSubmitted(true);
       
-      // Here you could send the data to a backend or Google Sheets
       console.log("Form submitted with data:", formData);
       console.log("Eligibility result:", eligibilityResult);
       
@@ -472,26 +471,49 @@ const StudyAbroadForm: React.FC = () => {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold mb-2">Your Results</h3>
+              <p className="text-gray-600 max-w-md mx-auto">
+                Based on your profile, we've calculated your eligibility for studying in {formData.country}
+              </p>
             </div>
             
             {result && (
               <>
-                <Card className="mb-8">
-                  <CardHeader className="pb-2">
+                <Card className="mb-8 shadow-md">
+                  <CardHeader className="pb-2 bg-brand-50">
                     <CardTitle className="text-2xl font-bold text-brand-700">{result.message}</CardTitle>
                     <CardDescription className="text-base">Based on your profile details</CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-6">
                     <EligibilityMeter result={result} />
                   </CardContent>
                 </Card>
                 
-                <Card className="mb-8 bg-brand-50 border-brand-100">
+                <Card className="mb-8 bg-brand-50 border-brand-100 shadow-md">
                   <CardContent className="p-6">
-                    <h4 className="font-semibold text-lg text-brand-800 mb-2">How We Can Help You</h4>
-                    <p className="text-brand-700">
+                    <h4 className="font-semibold text-xl text-brand-800 mb-3">How We Can Help You</h4>
+                    <p className="text-brand-700 leading-relaxed mb-4">
                       Our experts can help improve your profile, select the right university, and maximize your chances of admission with scholarship opportunities.
                     </p>
+                    <ul className="space-y-2 text-brand-700 pl-5">
+                      <li className="flex items-start">
+                        <svg className="w-5 h-5 text-brand-600 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>University selection guidance tailored to your profile</span>
+                      </li>
+                      <li className="flex items-start">
+                        <svg className="w-5 h-5 text-brand-600 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Scholarship matching and application assistance</span>
+                      </li>
+                      <li className="flex items-start">
+                        <svg className="w-5 h-5 text-brand-600 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Visa preparation and documentation support</span>
+                      </li>
+                    </ul>
                   </CardContent>
                 </Card>
                 
@@ -501,7 +523,7 @@ const StudyAbroadForm: React.FC = () => {
                     className="bg-brand-600 hover:bg-brand-700 h-14"
                     disabled={isSubmitting}
                   >
-                    <Mail className="mr-2" />
+                    <Mail className="mr-3" />
                     Book Free Counseling Session
                   </Button>
                   
@@ -511,7 +533,7 @@ const StudyAbroadForm: React.FC = () => {
                     className="border-brand-600 text-brand-600 hover:bg-brand-50 h-14"
                     disabled={isSubmitting}
                   >
-                    <Download className="mr-2" />
+                    <Download className="mr-3" />
                     Download Free Country Guide
                   </Button>
                 </div>

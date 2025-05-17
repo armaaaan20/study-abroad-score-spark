@@ -107,3 +107,26 @@
 .result-section {
   @apply space-y-3;
 }
+
+/* Course Card Animation */
+.course-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(23, 74, 88, 0.1), 0 10px 10px -5px rgba(23, 74, 88, 0.04);
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium;
+}
+
+.badge-new {
+  @apply bg-green-100 text-green-800;
+}
+
+.badge-popular {
+  @apply bg-brand-100 text-brand-800;
+}

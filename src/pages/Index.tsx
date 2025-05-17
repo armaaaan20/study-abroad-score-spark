@@ -2,6 +2,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import StudyAbroadForm from "@/components/StudyAbroadForm";
+import PopularCourses from "@/components/PopularCourses";
 
 const Index = () => {
   const { toast } = useToast();
@@ -27,6 +28,10 @@ const Index = () => {
         </div>
         
         <StudyAbroadForm />
+        
+        <div className="mt-16 mb-16">
+          <PopularCourses />
+        </div>
         
         <div className="max-w-4xl mx-auto mt-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
