@@ -4,15 +4,19 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ProgressBar from './ProgressBar';
 import EligibilityMeter from './EligibilityMeter';
 import { calculateEligibility, FormData, EligibilityResult } from '../services/eligibilityService';
+import { sendEmailToOwner } from '../services/emailService';
+import { Mail, Book, Download } from "lucide-react";
 
 const StudyAbroadForm: React.FC = () => {
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -144,19 +148,69 @@ const StudyAbroadForm: React.FC = () => {
     }
   };
 
-  const handleBookCounseling = () => {
+  const handleBookCounseling = async () => {
+    if (!result) return;
+    
+    setIsSubmitting(true);
+    
     toast({
-      title: "Booking Scheduled",
-      description: "Our counselor will contact you soon!",
+      title: "Processing request",
+      description: "Please wait while we connect you with a counselor...",
     });
+    
+    const success = await sendEmailToOwner({
+      formData,
+      eligibilityScore: result.score,
+      requestType: 'counseling'
+    });
+    
+    setIsSubmitting(false);
+    
+    if (success) {
+      toast({
+        title: "Booking Scheduled",
+        description: "Our counselor will contact you soon!",
+      });
+    } else {
+      toast({
+        title: "Request Failed",
+        description: "There was an error processing your request. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleDownloadGuide = () => {
+  const handleDownloadGuide = async () => {
+    if (!result) return;
+    
+    setIsSubmitting(true);
+    
     toast({
-      title: "Download Started",
-      description: "Your free guide is being downloaded",
+      title: "Processing download",
+      description: "Preparing your guide...",
     });
-    // In a real app, you would initiate a download here
+    
+    const success = await sendEmailToOwner({
+      formData,
+      eligibilityScore: result.score,
+      requestType: 'guide'
+    });
+    
+    setIsSubmitting(false);
+    
+    if (success) {
+      toast({
+        title: "Download Started",
+        description: "Your free guide is being downloaded",
+      });
+      // In a real app, you would initiate a download here
+    } else {
+      toast({
+        title: "Download Failed",
+        description: "There was an error processing your download. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -410,36 +464,44 @@ const StudyAbroadForm: React.FC = () => {
             </form>
           </div>
         ) : (
-          <div className="p-6 animate-fade-in">
+          <div className="p-8 animate-fade-in">
             <div className="text-center mb-8">
               <div className="inline-flex justify-center items-center w-20 h-20 bg-green-100 rounded-full mb-4">
                 <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold">Your Results</h3>
+              <h3 className="text-2xl font-bold mb-2">Your Results</h3>
             </div>
             
             {result && (
               <>
-                <div className="text-center mb-6">
-                  <div className="text-3xl font-bold text-brand-700 mb-2">{result.message}</div>
-                  <p className="text-gray-600">Based on your profile details</p>
-                </div>
+                <Card className="mb-8">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-2xl font-bold text-brand-700">{result.message}</CardTitle>
+                    <CardDescription className="text-base">Based on your profile details</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <EligibilityMeter result={result} />
+                  </CardContent>
+                </Card>
                 
-                <EligibilityMeter result={result} />
+                <Card className="mb-8 bg-brand-50 border-brand-100">
+                  <CardContent className="p-6">
+                    <h4 className="font-semibold text-lg text-brand-800 mb-2">How We Can Help You</h4>
+                    <p className="text-brand-700">
+                      Our experts can help improve your profile, select the right university, and maximize your chances of admission with scholarship opportunities.
+                    </p>
+                  </CardContent>
+                </Card>
                 
-                <div className="bg-brand-50 p-4 rounded-lg mb-8">
-                  <p className="text-brand-900">
-                    <strong>Our experts can help you:</strong> improve your profile, select the right university, and maximize your chances of admission with scholarship opportunities.
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <Button 
                     onClick={handleBookCounseling}
                     className="bg-brand-600 hover:bg-brand-700 h-14"
+                    disabled={isSubmitting}
                   >
+                    <Mail className="mr-2" />
                     Book Free Counseling Session
                   </Button>
                   
@@ -447,7 +509,9 @@ const StudyAbroadForm: React.FC = () => {
                     onClick={handleDownloadGuide} 
                     variant="outline"
                     className="border-brand-600 text-brand-600 hover:bg-brand-50 h-14"
+                    disabled={isSubmitting}
                   >
+                    <Download className="mr-2" />
                     Download Free Country Guide
                   </Button>
                 </div>
