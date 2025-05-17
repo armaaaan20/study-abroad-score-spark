@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Info } from 'lucide-react';
 
 interface InteractivePopularCoursesProps {
   onSelectCourse: (title: string, country: string, university: string) => void;
@@ -9,6 +10,7 @@ interface InteractivePopularCoursesProps {
 
 export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps> = ({ onSelectCourse }) => {
   const [hoveredCourseId, setHoveredCourseId] = useState<number | null>(null);
+  const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
   
   // Subset of courses for the form
   const courses = [
@@ -78,16 +80,25 @@ export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps>
     }
   ];
 
+  const handleSelectCourse = (course) => {
+    setSelectedCourseId(course.id);
+    onSelectCourse(course.title, course.country, course.university);
+  };
+
   return (
     <>
       {courses.map((course) => (
         <Card 
           key={course.id} 
-          className="course-card overflow-hidden border border-gray-200 cursor-pointer hover:shadow-lg transition-all hover:border-brand-400 transform hover:-translate-y-1 duration-300"
+          className={`course-card overflow-hidden border transition-all duration-300 ${
+            hoveredCourseId === course.id ? 'shadow-lg border-brand-500' : 'border-gray-200'
+          } ${
+            selectedCourseId === course.id ? 'ring-2 ring-brand-500' : ''
+          }`}
           onMouseEnter={() => setHoveredCourseId(course.id)}
           onMouseLeave={() => setHoveredCourseId(null)}
         >
-          <div className="h-1 bg-brand-600"></div>
+          <div className={`h-1 ${selectedCourseId === course.id ? 'bg-brand-700' : 'bg-brand-600'}`}></div>
           <CardHeader className="pb-2">
             <div className="flex justify-between items-start">
               <CardTitle className="text-base font-bold text-brand-800 line-clamp-2">
@@ -117,35 +128,56 @@ export const InteractivePopularCourses: React.FC<InteractivePopularCoursesProps>
               <div className="text-brand-700 font-semibold">{course.averageFees}</div>
             </div>
             
-            {/* Expandable content that shows on hover */}
-            <div className={`mt-3 overflow-hidden transition-all duration-300 ${hoveredCourseId === course.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="space-y-3 p-2 bg-gray-50 rounded-lg">
+            {/* Expandable content that shows on hover - within the card */}
+            <div 
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                hoveredCourseId === course.id 
+                  ? 'max-h-[500px] opacity-100 mt-3' 
+                  : 'max-h-0 opacity-0 mt-0'
+              }`}
+            >
+              <div className="space-y-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
                 <div>
-                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Admission Requirements</h5>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">
+                    Admission Requirements
+                  </h5>
                   <p className="text-xs mt-1">{course.details.requirements}</p>
                 </div>
                 
                 <div>
-                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Career Prospects</h5>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">
+                    Career Prospects
+                  </h5>
                   <p className="text-xs mt-1">{course.details.prospects}</p>
                 </div>
                 
                 <div>
-                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">Scholarship Opportunities</h5>
+                  <h5 className="text-sm font-semibold text-brand-700 border-b pb-1 border-gray-100">
+                    Scholarship Opportunities
+                  </h5>
                   <p className="text-xs mt-1">{course.details.scholarships}</p>
                 </div>
+              </div>
+              
+              <div className="mt-3 text-xs text-gray-500 flex items-center">
+                <Info className="w-3 h-3 mr-1" />
+                <span>Hover to view details, click to select</span>
               </div>
             </div>
           </CardContent>
           
           <CardFooter className="pt-1 pb-3 flex justify-center">
             <Button 
-              variant="outline" 
+              variant={selectedCourseId === course.id ? "default" : "outline"}
               size="sm"
-              className="text-xs text-brand-600 hover:bg-brand-50 hover:text-brand-800 transition-colors w-full"
-              onClick={() => onSelectCourse(course.title, course.country, course.university)}
+              className={`text-xs transition-colors w-full ${
+                selectedCourseId === course.id 
+                  ? 'bg-brand-600 text-white hover:bg-brand-700' 
+                  : 'text-brand-600 hover:bg-brand-50 hover:text-brand-800'
+              }`}
+              onClick={() => handleSelectCourse(course)}
             >
-              Select This Course
+              {selectedCourseId === course.id ? 'Selected' : 'Select This Course'}
             </Button>
           </CardFooter>
         </Card>
