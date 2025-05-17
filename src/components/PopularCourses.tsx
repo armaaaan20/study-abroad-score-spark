@@ -16,7 +16,7 @@ const courses = [
     new: false,
     averageFees: '$25,000 - $45,000 per year',
     details: {
-      requirements: 'Bachelor's degree with 75%+ marks, GRE 310+, IELTS 7+',
+      requirements: "Bachelor's degree with 75%+ marks, GRE 310+, IELTS 7+",
       prospects: 'Software Engineer, Data Scientist, ML Engineer, Product Manager',
       scholarships: 'TA/RA positions, University Merit Scholarships, STEM Fellowships'
     }
@@ -32,7 +32,7 @@ const courses = [
     new: false,
     averageFees: 'CAD 30,000 - 50,000 per year',
     details: {
-      requirements: 'Bachelor's degree with 70%+ marks, 2+ years work experience, GMAT 650+',
+      requirements: "Bachelor's degree with 70%+ marks, 2+ years work experience, GMAT 650+",
       prospects: 'Management Consultant, Financial Analyst, Marketing Manager, Entrepreneur',
       scholarships: 'University Scholarships, Corporate Sponsorships, Leadership Awards'
     }
@@ -48,7 +48,7 @@ const courses = [
     new: false,
     averageFees: 'AUD 35,000 - 45,000 per year',
     details: {
-      requirements: 'Bachelor's degree in Engineering with 65%+ marks, IELTS 6.5+',
+      requirements: "Bachelor's degree in Engineering with 65%+ marks, IELTS 6.5+",
       prospects: 'Professional Engineer, Project Manager, Technical Consultant',
       scholarships: 'Australia Awards, Research Scholarships, Engineering Excellence Grants'
     }
@@ -64,7 +64,7 @@ const courses = [
     new: true,
     averageFees: '£18,000 - £30,000 per year',
     details: {
-      requirements: 'Bachelor's degree with 65%+ marks in quantitative field, IELTS 6.5+',
+      requirements: "Bachelor's degree with 65%+ marks in quantitative field, IELTS 6.5+",
       prospects: 'Data Scientist, Data Analyst, Business Intelligence Specialist',
       scholarships: 'Chevening Scholarships, Commonwealth Scholarships, University Grants'
     }
