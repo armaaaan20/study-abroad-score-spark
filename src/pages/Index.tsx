@@ -18,10 +18,10 @@ const Index = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-800 mb-4">
-            Study Abroad Eligibility Calculator
+            EdusphereOverseas 
           </h1>
           <p className="max-w-2xl mx-auto text-gray-600 text-lg">
-            Find out if you qualify for your dream international program. Get a personalized assessment based on your academic profile.
+            Fufill Your Study Aborad Dream 🛫
           </p>
         </div>
         
