@@ -1,8 +1,8 @@
-//import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import StudyAbroadForm from "@/components/StudyAbroadForm";
 
-/*const Index = () => {
+const Index = () => {
   const { toast } = useToast();
   
   useEffect(() => {
@@ -11,7 +11,7 @@ import StudyAbroadForm from "@/components/StudyAbroadForm";
       title: "Welcome!",
       description: "Check your eligibility for studying abroad",
     });
-  }, [toast]);*/
+  }, [toast]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 py-12 px-4">
