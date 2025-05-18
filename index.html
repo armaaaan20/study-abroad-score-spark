@@ -17,25 +17,29 @@
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     <script>
-      // Check if we need to redirect
+      // Check if we're in production and need path handling
       (function() {
-        const locationPath = window.location;
-        const urlParams = new URLSearchParams(locationPath.search);
-        const path = urlParams.get('path');
-        
-        if (path) {
-          // Remove the 'path' parameter
-          urlParams.delete('path');
+        // Only run this script in production where we need the GitHub Pages handling
+        if (window.location.hostname !== 'localhost' && 
+            !window.location.hostname.includes('lovableproject.com')) {
+          const locationPath = window.location;
+          const urlParams = new URLSearchParams(locationPath.search);
+          const path = urlParams.get('path');
           
-          // Construct the new URL with history API to prevent page reload
-          const baseHref = "/study-abroad-score-spark/"; // Make sure this matches your repo name
-          const newUrl = 
-            baseHref + 
-            path + 
-            (urlParams.toString() ? '?' + urlParams.toString() : '') + 
-            (locationPath.hash || '');
-          
-          window.history.replaceState(null, '', newUrl);
+          if (path) {
+            // Remove the 'path' parameter
+            urlParams.delete('path');
+            
+            // Construct the new URL with history API to prevent page reload
+            const baseHref = "/study-abroad-score-spark/"; // Make sure this matches your repo name
+            const newUrl = 
+              baseHref + 
+              path + 
+              (urlParams.toString() ? '?' + urlParams.toString() : '') + 
+              (locationPath.hash || '');
+            
+            window.history.replaceState(null, '', newUrl);
+          }
         }
       })();
     </script>

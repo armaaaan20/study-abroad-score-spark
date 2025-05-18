@@ -24,10 +24,19 @@
 <body>
   <p>Redirecting to the home page...</p>
   <script>
-    // Redirect to index.html
-    const segmentCount = 1; // Adjust this value based on your repo name
-    const redirectPath = '/study-abroad-score-spark/';
-    window.location.replace(redirectPath);
+    // Get the current path
+    const pathSegmentsToKeep = 1; // Keep the repo name segment
+    const repo = '/study-abroad-score-spark';
+    
+    // Redirect with the correct path structure for GitHub Pages
+    const l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      repo + '/?path=' +
+      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/') +
+      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
   </script>
 </body>
 </html>
