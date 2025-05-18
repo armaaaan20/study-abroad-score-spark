@@ -1,6 +1,6 @@
 {
   "name": "vite_react_shadcn_ts",
-  "private": true,
+  "hompage":"https://armaaaan20.github.io/grade-genius-report-cards/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -9,6 +9,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
+    "predeploy":"npm run build",
+    "deploy":"gh-pages -d dist"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
