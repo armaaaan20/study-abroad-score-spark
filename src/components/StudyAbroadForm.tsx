@@ -91,7 +91,7 @@ const StudyAbroadForm: React.FC = () => {
     <div className="w-full max-w-4xl mx-auto">
       <div className="bg-white shadow-xl rounded-xl overflow-hidden">
         <div className="bg-gradient-to-r from-brand-600 to-brand-800 p-6 text-white">
-          <h2 className="text-2xl md:text-3xl font-bold mb-2">EdushpereOverseas: Am-I-Eligible Tool </h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">The Am-I-Eligible Tool </h2>
           <p className="opacity-90">Find out if you qualify for your dream international education</p>
         </div>
 
