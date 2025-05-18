@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script type="text/javascript">
+    // Single Page Apps for GitHub Pages
+    // MIT License
+    // https://github.com/rafgraph/spa-github-pages
+    var pathSegmentsToKeep = 1;
+    
+    var l = window.location;
+    var href = l.href.split('/').slice(0, 3 + pathSegmentsToKeep).join('/')
+        + '/study-abroad-score-spark'
+        + l.href.slice(l.origin.length + pathSegmentsToKeep + 1)
+        .replace(/&/g, '~and~')
+        .split('#')[0];
+    
+    if (l.hash) {
+      href += l.hash;
+    }
+    
+    window.location.href = href;
+  </script>
+</head>
+<body>
+  Redirecting...
+</body>
+</html>
