@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/study-abroad-score-spark/' : '/',  // Conditional base path
+  base:"/study-abroad-score-spark",  // Conditional base path
   server: {
     host: "::",
     port: 8080,
